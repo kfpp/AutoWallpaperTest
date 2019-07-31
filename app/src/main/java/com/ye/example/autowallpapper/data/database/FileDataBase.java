@@ -58,6 +58,10 @@ public abstract class FileDataBase extends RoomDatabase {
         return getFileDao().loadFiles(directoryPath);
     }
 
+    public Flowable<List<ImageFile>> loadAllFiles() {
+        return getFileDao().loadAllImageFiles();
+    }
+
     public ImageFile loadFile(String filePath) {
         return getFileDao().loadFile(filePath);
     }

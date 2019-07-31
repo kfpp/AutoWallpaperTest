@@ -27,8 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author yezhihao
- * @date 2019-07-31 15:53
+ * @author yezhihao 2019-07-31 15:53
  */
 public class FileRecyclerView extends RecyclerView {
 
@@ -43,7 +42,7 @@ public class FileRecyclerView extends RecyclerView {
 
     public FileRecyclerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        
+
     }
 
     @Override
@@ -67,6 +66,7 @@ public class FileRecyclerView extends RecyclerView {
 
     private static final class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mTvName, mTvDesc, mTvCount;
+
         private ViewHolder(@NonNull View itemView) {
             super(itemView);
             mTvName = itemView.findViewById(R.id.tv_name);
@@ -92,6 +92,7 @@ public class FileRecyclerView extends RecyclerView {
 
         private List<DataAdapter> mList;
         private Map<String, Integer> mCountMap;
+
         private Adapter() {
             mList = new ArrayList<>();
             mCountMap = new HashMap<>();
@@ -125,22 +126,16 @@ public class FileRecyclerView extends RecyclerView {
                 Observer<Integer> observer = new Observer<Integer>() {
                     @Override
                     public void onChanged(@Nullable Integer integer) {
-                        mCountMap.put(data.mPath, integer);
+                        int count = integer == null ? -1 : integer;
+                        mCountMap.put(data.mPath, count);
                         Log.d("yyyy", "directory : " + data.mName + " image count : " + integer);
-                        viewHolder.setCount(integer);
+                        viewHolder.setCount(count);
                         viewModel.getImageCountLiveData(data.mPath).removeObserver(this);
                     }
                 };
                 viewModel.getImageCountLiveData(data.mPath).observe(activity, observer);
                 viewModel.loadDirectoryFileCount(data.mPath);
             }
-        }
-
-
-
-        @Override
-        public void onViewRecycled(@NonNull ViewHolder holder) {
-            super.onViewRecycled(holder);
         }
 
         @Override
@@ -193,8 +188,6 @@ public class FileRecyclerView extends RecyclerView {
             return list;
         }
     }
-
-
 
 
 }

@@ -8,9 +8,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.ye.example.autowallpapper.base.YEApp;
+import com.ye.example.autowallpapper.utils.GlobalData;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,8 +21,6 @@ import io.reactivex.SingleOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
-
-import static android.app.WallpaperManager.FLAG_SYSTEM;
 
 public class NextWallPaperBroadcast extends BroadcastReceiver {
     public static final String ACTION_NAME = "com.ye.example.notification_click_broadcast";
@@ -45,7 +42,7 @@ public class NextWallPaperBroadcast extends BroadcastReceiver {
 
     private void dealShowNext(final Context context) {
         Log.d("yyyy", "received");
-        List<String> images = YEApp.getInstance().getImageList();
+        List<String> images = GlobalData.getInstance().getImageList();
         if (images == null || images.size() == 0) {
             return;
         }

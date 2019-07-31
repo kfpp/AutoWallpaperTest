@@ -24,6 +24,9 @@ public interface FileDao {
     @Query("SELECT * FROM ImageDirectory")
     Flowable<List<ImageDirectory>> loadAllDirectories();
 
+    @Query("select * from ImageFile")
+    Flowable<List<ImageFile>> loadAllImageFiles();
+
     @Query("SELECT * FROM ImageFile WHERE directory_path == :directoryPath")
     Flowable<List<ImageFile>> loadFiles(String directoryPath);
 
