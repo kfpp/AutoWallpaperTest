@@ -69,7 +69,8 @@ public class NextWallPaperBroadcast extends BroadcastReceiver {
                                 Context.WALLPAPER_SERVICE);
                         try {
                             if (Build.VERSION.SDK_INT >= 24) {
-                                wpm.setBitmap(bitmap, null, false);
+                                //不加最后面的flag参数，会导致锁屏图片重置为初始值/华为的杂志锁屏暂停并显示默认图片
+                                wpm.setBitmap(bitmap, null, false, WallpaperManager.FLAG_SYSTEM);
                             } else {
                                 wpm.setBitmap(bitmap);
                             }
