@@ -1,6 +1,11 @@
 package com.ye.example.autowallpapper.base;
 
 import android.app.Application;
+import android.content.Context;
+
+import com.ye.example.autowallpapper.MainActivity;
+import com.ye.example.autowallpapper.common.Initializer;
+import com.ye.example.autowallpapper.data.database.FileDataBase;
 
 import java.util.List;
 
@@ -21,6 +26,9 @@ public class YEApp extends Application {
     public void onCreate() {
         super.onCreate();
         sInstance = this;
+        Context context = getApplicationContext();
+        FileDataBase.initDataBase(context);
+        Initializer.init(context);
     }
 
 

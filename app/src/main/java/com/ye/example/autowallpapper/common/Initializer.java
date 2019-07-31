@@ -12,8 +12,6 @@ import com.ye.example.autowallpapper.WallPaperService;
 public class Initializer {
     public static void init(Context context) {
         Context applicationContext = context.getApplicationContext();
-
         applicationContext.startService(new Intent(applicationContext, WallPaperService.class));
-
     }
 }

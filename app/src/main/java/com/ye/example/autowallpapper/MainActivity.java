@@ -1,20 +1,37 @@
 package com.ye.example.autowallpapper;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ye.example.autowallpapper.base.BaseActivity;
 import com.ye.example.autowallpapper.common.Initializer;
+import com.ye.example.autowallpapper.data.database.FileDataBase;
+import com.ye.example.autowallpapper.data.entities.ImageDirectory;
+import com.ye.example.autowallpapper.data.entities.ImageFile;
+import com.ye.example.autowallpapper.utils.FileBrowserUtils;
+import com.ye.example.autowallpapper.utils.FileRecommendUtil;
 import com.ye.example.autowallpapper.utils.FileUtil;
+import com.ye.example.autowallpapper.viewmodels.MainViewModel;
+import com.ye.example.autowallpapper.views.dialogs.PathResultDialog;
+
+import java.io.File;
+import java.util.List;
+import java.util.logging.Logger;
 
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
@@ -25,60 +42,30 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener{
+public class MainActivity extends BaseActivity implements View.OnClickListener, PathResultDialog.IResultBackListener {
 
-    private TextView mTvMain;
-    private boolean mIsServiceStarted;
+    private FileBrowserUtils mFileBrowserUtils;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mIsServiceStarted = false;
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(this);
-        mTvMain = findViewById(R.id.tv_main);
-
-        final long timeStart = System.currentTimeMillis();
-        Single<Integer> observable = Single.create(new SingleOnSubscribe<Integer>() {
-            @Override
-            public void subscribe(SingleEmitter<Integer> emitter) throws Exception {
-                int count = FileUtil.getSubFileCount(FileUtil.DEFAULT_IMAGE_DIRECTORY_PATH);
-                emitter.onSuccess(count);
-            }
-        });
-        observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Integer>() {
-                    @Override
-                    public void accept(Integer integer) throws Exception {
-                        long timeEnd = System.currentTimeMillis();
-                        mTvMain.setText(FileUtil.DEFAULT_IMAGE_DIRECTORY_PATH + " , count: " + integer + " cost time : " + (timeEnd - timeStart));
-                        if (integer.intValue() > 0) {
-                            mIsServiceStarted = true;
-                            Initializer.init(MainActivity.this);
-                        }
-                    }
-                });
-
+        mFileBrowserUtils = new FileBrowserUtils(this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -87,15 +74,25 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (mFileBrowserUtils.isResult(requestCode)) {
+            String path = mFileBrowserUtils.onActivityResult(requestCode, resultCode, data);
+            Toast.makeText(this, path, Toast.LENGTH_SHORT).show();
+            PathResultDialog.show(this, path, FileRecommendUtil.getRecommendFiles(path), this);
+        }
+    }
+
+    @Override
     public void onClick(View v) {
-//        Snackbar.make(v, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show();
-        if (!mIsServiceStarted) {
-            mIsServiceStarted = true;
-            startService(new Intent(this, WallPaperService.class));
-        } else {
-            mIsServiceStarted = false;
-            stopService(new Intent(this, WallPaperService.class));
+        mFileBrowserUtils.showFileBorwser();
+    }
+
+    @Override
+    public void onPathSelected(List<String> pathList) {
+        if (pathList.size() > 0) {
+            String parentPath = new File(pathList.get(0)).getParentFile().getAbsolutePath();
+            FileDataBase.getInstance().insertDirectoryAndFiles(parentPath, pathList);
         }
     }
 

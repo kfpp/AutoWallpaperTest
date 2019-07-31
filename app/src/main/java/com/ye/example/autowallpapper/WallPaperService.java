@@ -5,7 +5,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.app.WallpaperColors;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
@@ -19,9 +18,7 @@ import android.os.IBinder;
 import com.ye.example.autowallpapper.base.YEApp;
 import com.ye.example.autowallpapper.utils.FileUtil;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
@@ -68,7 +65,7 @@ public class WallPaperService extends Service {
 
         Single<List<String>> observable = Single.create(new SingleOnSubscribe<List<String>>() {
             @Override
-            public void subscribe(SingleEmitter<List<String>> emitter) throws Exception {
+            public void subscribe(SingleEmitter<List<String>> emitter) {
                 List<String> pathList = FileUtil.imagePathList(FileUtil.DEFAULT_IMAGE_DIRECTORY_PATH);
                 emitter.onSuccess(pathList);
             }
@@ -96,8 +93,7 @@ public class WallPaperService extends Service {
     private PendingIntent generateClickIntent() {
         Intent intent = new Intent(NextWallPaperBroadcast.ACTION_NAME);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        return pendingIntent;
+        return PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     @Override
