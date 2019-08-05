@@ -27,6 +27,7 @@ public class WallPaperService extends Service {
 
         NextWallPaperBroadcast receiver = new NextWallPaperBroadcast();
         IntentFilter filter = new IntentFilter(NextWallPaperBroadcast.ACTION_NAME);
+        filter.addAction(Intent.ACTION_USER_PRESENT);
         registerReceiver(receiver, filter);
     }
 
@@ -54,8 +55,8 @@ public class WallPaperService extends Service {
         manager.createNotificationChannel(Channel);
 
         Notification notification = new Notification.Builder(this, CHANNEL_ID)
-                .setContentTitle("主服务")//标题
-                .setContentText("运行中...")//内容
+                .setContentTitle("壁纸自动切换服务")//标题
+                .setContentText("正在运行中...")//内容
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.mipmap.ic_launcher)//小图标一定需要设置,否则会报错(如果不设置它启动服务前台化不会报错,但是你会发现这个通知不会启动),如果是普通通知,不设置必然报错
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))

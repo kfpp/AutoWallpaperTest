@@ -18,6 +18,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <receiver android:name=".base.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
 
         <service
             android:name=".WallPaperService"

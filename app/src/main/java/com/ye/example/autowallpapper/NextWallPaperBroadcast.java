@@ -9,6 +9,8 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.util.Log;
 
+import com.ye.example.autowallpapper.presenters.AutoChangePresenter;
+import com.ye.example.autowallpapper.presenters.RandomNextPaperPresenter;
 import com.ye.example.autowallpapper.utils.GlobalData;
 
 import java.io.IOException;
@@ -26,6 +28,13 @@ public class NextWallPaperBroadcast extends BroadcastReceiver {
     public static final String ACTION_NAME = "com.ye.example.notification_click_broadcast";
     private static boolean sIsDealing = false;
 
+    private RandomNextPaperPresenter mRandomPresenter;
+    private AutoChangePresenter mAutoChangePresenter;
+    public NextWallPaperBroadcast() {
+        mRandomPresenter = new RandomNextPaperPresenter();
+        mAutoChangePresenter = new AutoChangePresenter(mRandomPresenter);
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         final String action = intent.getAction();
@@ -34,57 +43,14 @@ public class NextWallPaperBroadcast extends BroadcastReceiver {
                 Log.d("yyyy", "ignore action, wall paper is dealing!");
             } else {
                 sIsDealing = true;
-                dealShowNext(context);
+                mRandomPresenter.dealShowNext(context);
                 sIsDealing = false;
             }
+        } else if (Intent.ACTION_USER_PRESENT.equals(action)) {
+            mAutoChangePresenter.checkAndChange(context);
         }
     }
 
-    private void dealShowNext(final Context context) {
-        Log.d("yyyy", "received");
-        List<String> images = GlobalData.getInstance().getImageList();
-        if (images == null || images.size() == 0) {
-            return;
-        }
 
-        final String nextPath = randomPath(images);
-
-
-        Single<Bitmap> obserable = Single.create(new SingleOnSubscribe<Bitmap>() {
-            @Override
-            public void subscribe(SingleEmitter<Bitmap> emitter) throws Exception {
-                long timeStart = System.currentTimeMillis();
-                Bitmap image = BitmapFactory.decodeFile(nextPath);
-                long tiemEnd = System.currentTimeMillis();
-                Log.d("yyyy", "decodeFile cost : " + (tiemEnd - timeStart));
-                emitter.onSuccess(image);
-            }
-        });
-        obserable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Bitmap>() {
-                    @Override
-                    public void accept(Bitmap bitmap) throws Exception {
-                        WallpaperManager wpm = (WallpaperManager) context.getSystemService(
-                                Context.WALLPAPER_SERVICE);
-                        try {
-                            if (Build.VERSION.SDK_INT >= 24) {
-                                //不加最后面的flag参数，会导致锁屏图片重置为初始值/华为的杂志锁屏暂停并显示默认图片
-                                wpm.setBitmap(bitmap, null, false, WallpaperManager.FLAG_SYSTEM);
-                            } else {
-                                wpm.setBitmap(bitmap);
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-    }
-
-    private String randomPath(List<String> images) {
-        Random random = new Random(System.currentTimeMillis());
-        int randomIndex = random.nextInt(images.size());
-        return images.get(randomIndex);
-    }
 
 }
