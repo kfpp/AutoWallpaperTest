@@ -19,7 +19,7 @@ public class AutoChangePresenter {
 
     public void checkAndChange() {
         Logger.d("yyyy", "checkAndChange");
-        if (check()) {
+        if (true ||check()) {
             showNext();
         }
     }

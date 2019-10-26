@@ -3,7 +3,7 @@ package com.ye.example.autowallpapper.common;
 import android.content.Context;
 import android.content.Intent;
 
-import com.ye.example.autowallpapper.WallPaperService;
+import com.ye.example.autowallpapper.components.WallPaperService;
 
 /**
  * @author yezhihao

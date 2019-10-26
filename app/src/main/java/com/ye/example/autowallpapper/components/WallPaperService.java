@@ -1,4 +1,4 @@
-package com.ye.example.autowallpapper;
+package com.ye.example.autowallpapper.components;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
@@ -13,6 +13,8 @@ import android.graphics.Color;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
+
+import com.ye.example.autowallpapper.R;
 
 public class WallPaperService extends Service {
     private static final String CHANNEL_ID = "AutoWallPaperService";

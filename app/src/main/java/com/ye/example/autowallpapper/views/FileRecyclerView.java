@@ -26,11 +26,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * @author yezhihao 2019-07-31 15:53
  */
 public class FileRecyclerView extends RecyclerView {
 
+    private Adapter mAdapter;
 
     public FileRecyclerView(Context context) {
         this(context, null);
@@ -42,26 +49,42 @@ public class FileRecyclerView extends RecyclerView {
 
     public FileRecyclerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        final Adapter adapter = new Adapter();
+        mAdapter = new Adapter();
         setLayoutManager(new LinearLayoutManager(getContext()));
-        setAdapter(adapter);
+        setAdapter(mAdapter);
+    }
 
-        AppCompatActivity activity = (AppCompatActivity) getContext();
-        MainViewModel viewModel = ViewModelProviders.of(activity).get(MainViewModel.class);
-        viewModel.getDirectoryLiveData().observe(activity, new Observer<List<ImageDirectory>>() {
-            @Override
-            public void onChanged(@Nullable List<ImageDirectory> directories) {
-                adapter.setList(DataAdapterFactory.parseDirectory(directories));
-            }
-        });
-
-        viewModel.loadDirectories();
+    public void setData(List<ImageDirectory> data) {
+        final List<DataAdapter> emptyList = new ArrayList<>();
+        if (data == null || data.size() == 0) {
+            mAdapter.setList(emptyList);
+        }
+        Single.just(data)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
+                .map(new Function<List<ImageDirectory>, List<DataAdapter>>() {
+                    @Override
+                    public List<DataAdapter> apply(List<ImageDirectory> imageDirectories) throws Exception {
+                        return DataAdapterFactory.parseDirectory(imageDirectories);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<DataAdapter>>() {
+                    @Override
+                    public void accept(List<DataAdapter> dataAdapters) throws Exception {
+                        mAdapter.setList(dataAdapters);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        mAdapter.setList(emptyList);
+                    }
+                });
     }
 
     private static final class ViewHolder extends RecyclerView.ViewHolder {
