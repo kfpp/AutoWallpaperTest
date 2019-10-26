@@ -26,7 +26,7 @@ public class WallPaperService extends Service {
         }
 
         NextWallPaperBroadcast receiver = new NextWallPaperBroadcast();
-        IntentFilter filter = new IntentFilter(NextWallPaperBroadcast.ACTION_NAME);
+        IntentFilter filter = new IntentFilter(NextWallPaperBroadcast.ACTION_CLICKED);
         filter.addAction(Intent.ACTION_USER_PRESENT);
         registerReceiver(receiver, filter);
     }
@@ -66,7 +66,7 @@ public class WallPaperService extends Service {
     }
 
     private PendingIntent generateClickIntent() {
-        Intent intent = new Intent(NextWallPaperBroadcast.ACTION_NAME);
+        Intent intent = new Intent(NextWallPaperBroadcast.ACTION_CLICKED);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }

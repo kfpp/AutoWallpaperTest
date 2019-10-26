@@ -1,8 +1,7 @@
 package com.ye.example.autowallpapper.presenters;
 
-import android.content.Context;
-
 import com.ye.example.autowallpapper.common.Constant;
+import com.ye.example.autowallpapper.presenters.base.IBaseShowPresenter;
 import com.ye.example.autowallpapper.utils.Logger;
 import com.ye.example.autowallpapper.utils.SpUtil;
 
@@ -12,17 +11,21 @@ import com.ye.example.autowallpapper.utils.SpUtil;
 public class AutoChangePresenter {
     public static final int MINUTE = 60 * 1000;
 
-    private RandomNextPaperPresenter mRandomPresenter;
+    private IBaseShowPresenter mshowPresenter;
 
-    public AutoChangePresenter(RandomNextPaperPresenter randomPresenter) {
-        mRandomPresenter = randomPresenter;
+    public AutoChangePresenter(IBaseShowPresenter randomPresenter) {
+        mshowPresenter = randomPresenter;
     }
 
-    public void checkAndChange(Context context) {
+    public void checkAndChange() {
         Logger.d("yyyy", "checkAndChange");
         if (check()) {
-            showNext(context);
+            showNext();
         }
+    }
+
+    public void changeImmediately() {
+        showNext();
     }
 
     private boolean check() {
@@ -35,8 +38,8 @@ public class AutoChangePresenter {
         return (nowTime - lastShow) >= 5 * MINUTE;
     }
 
-    private void showNext(Context context) {
+    private void showNext() {
         Logger.d("yyyy", "showNext");
-        mRandomPresenter.dealShowNext(context);
+        mshowPresenter.showNextWallPaper();
     }
 }

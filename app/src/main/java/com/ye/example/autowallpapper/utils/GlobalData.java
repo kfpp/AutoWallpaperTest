@@ -1,6 +1,5 @@
 package com.ye.example.autowallpapper.utils;
 
-import com.ye.example.autowallpapper.base.YEApp;
 import com.ye.example.autowallpapper.data.database.FileDataBase;
 import com.ye.example.autowallpapper.data.entities.ImageFile;
 
