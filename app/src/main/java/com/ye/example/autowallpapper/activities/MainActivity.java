@@ -1,4 +1,4 @@
-package com.ye.example.autowallpapper;
+package com.ye.example.autowallpapper.activities;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -11,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -18,6 +19,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ye.example.autowallpapper.R;
 import com.ye.example.autowallpapper.base.BaseActivity;
 import com.ye.example.autowallpapper.common.Initializer;
 import com.ye.example.autowallpapper.data.database.FileDataBase;
@@ -27,6 +29,7 @@ import com.ye.example.autowallpapper.utils.FileBrowserUtils;
 import com.ye.example.autowallpapper.utils.FileRecommendUtil;
 import com.ye.example.autowallpapper.utils.FileUtil;
 import com.ye.example.autowallpapper.viewmodels.MainViewModel;
+import com.ye.example.autowallpapper.views.FileRecyclerView;
 import com.ye.example.autowallpapper.views.dialogs.PathResultDialog;
 
 import java.io.File;
@@ -45,7 +48,7 @@ import io.reactivex.schedulers.Schedulers;
 public class MainActivity extends BaseActivity implements View.OnClickListener, PathResultDialog.IResultBackListener {
 
     private FileBrowserUtils mFileBrowserUtils;
-
+    private FileRecyclerView mRecyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +58,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(this);
         mFileBrowserUtils = new FileBrowserUtils(this);
+
+        mRecyclerView = findViewById(R.id.recycler_view);
+
+        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        viewModel.getDirectoryLiveData().observe(this, new Observer<List<ImageDirectory>>() {
+            @Override
+            public void onChanged(@Nullable List<ImageDirectory> directories) {
+                mRecyclerView.setData(directories);
+            }
+        });
+
+        viewModel.loadDirectories();
     }
 
     @Override
@@ -67,6 +82,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            SettingActivity.startActivity(this);
             return true;
         }
 
@@ -78,8 +94,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onActivityResult(requestCode, resultCode, data);
         if (mFileBrowserUtils.isResult(requestCode)) {
             String path = mFileBrowserUtils.onActivityResult(requestCode, resultCode, data);
-            Toast.makeText(this, path, Toast.LENGTH_SHORT).show();
-            PathResultDialog.show(this, path, FileRecommendUtil.getRecommendFiles(path), this);
+            if (!TextUtils.isEmpty(path)) {
+                Toast.makeText(this, path, Toast.LENGTH_SHORT).show();
+                PathResultDialog.show(this, path, FileRecommendUtil.getRecommendFiles(path), this);
+            }
         }
     }
 
