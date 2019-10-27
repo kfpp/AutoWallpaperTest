@@ -27,4 +27,9 @@ public class NormalModePresenter implements IModePresenter {
         mTarget.getFab().setImageResource(R.drawable.ic_add_to_photos);
         mTarget.getSettingMenuItem().setIcon(R.drawable.ic_settings);
     }
+
+    @Override
+    public boolean onBackPress() {
+        return false;
+    }
 }

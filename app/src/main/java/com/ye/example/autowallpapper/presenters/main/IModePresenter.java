@@ -7,4 +7,6 @@ public interface IModePresenter {
     void onFloatBtnClicked();
 
     void enterMode();
+
+    boolean onBackPress();
 }

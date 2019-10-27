@@ -2,6 +2,7 @@ package com.ye.example.autowallpapper.presenters.main;
 
 import com.ye.example.autowallpapper.R;
 import com.ye.example.autowallpapper.base.MainActivity;
+import com.ye.example.autowallpapper.utils.VibratorUtil;
 
 public class EditModePresenter implements IModePresenter {
 
@@ -25,5 +26,12 @@ public class EditModePresenter implements IModePresenter {
     public void enterMode() {
         mTarget.getFab().setImageResource(R.drawable.ic_delete);
         mTarget.getSettingMenuItem().setIcon(R.drawable.ic_done);
+        VibratorUtil.VibratorOnce(mTarget);
+    }
+
+    @Override
+    public boolean onBackPress() {
+        mTarget.getRecyclerView().exitEditMode();
+        return true;
     }
 }
