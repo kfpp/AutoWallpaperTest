@@ -11,13 +11,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.SettingActivity"
+        <activity android:name=".models.settings.SettingActivity"
             android:label="@string/action_settings"
             android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".activities.MainActivity"/>
+            android:parentActivityName=".base.MainActivity"/>
 
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".base.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

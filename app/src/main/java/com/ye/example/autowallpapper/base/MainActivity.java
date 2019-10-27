@@ -1,4 +1,4 @@
-package com.ye.example.autowallpapper.activities;
+package com.ye.example.autowallpapper.base;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,9 @@ import com.ye.example.autowallpapper.common.Initializer;
 import com.ye.example.autowallpapper.data.database.FileDataBase;
 import com.ye.example.autowallpapper.data.entities.ImageDirectory;
 import com.ye.example.autowallpapper.data.entities.ImageFile;
+import com.ye.example.autowallpapper.presenters.main.EditModePresenter;
+import com.ye.example.autowallpapper.presenters.main.IModePresenter;
+import com.ye.example.autowallpapper.presenters.main.NormalModePresenter;
 import com.ye.example.autowallpapper.utils.FileBrowserUtils;
 import com.ye.example.autowallpapper.utils.FileRecommendUtil;
 import com.ye.example.autowallpapper.utils.FileUtil;
@@ -49,17 +53,45 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private FileBrowserUtils mFileBrowserUtils;
     private FileRecyclerView mRecyclerView;
+    private FloatingActionButton mFab;
+    private Toolbar mToolbar;
+    private IModePresenter mNormalModePresenter;
+    private IModePresenter mEditModePresenter;
+    private IModePresenter mCurrentModePresenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(this);
+        mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        mFab = findViewById(R.id.fab);
+        mFab.setOnClickListener(this);
         mFileBrowserUtils = new FileBrowserUtils(this);
-
+        mNormalModePresenter = new NormalModePresenter(this);
+        mEditModePresenter = new EditModePresenter(this);
+        mCurrentModePresenter = mNormalModePresenter;
         mRecyclerView = findViewById(R.id.recycler_view);
+
+        mRecyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("yyyy", " position : " + position + ", id : " + id);
+            }
+        });
+
+        mRecyclerView.setmEditModeListener(new FileRecyclerView.IEditModeListener() {
+            @Override
+            public void onEnterEditMode(int currentIndex) {
+                mCurrentModePresenter = mEditModePresenter;
+                mCurrentModePresenter.enterMode();
+            }
+
+            @Override
+            public void onExitEditMode() {
+                mCurrentModePresenter = mNormalModePresenter;
+                mCurrentModePresenter.enterMode();
+            }
+        });
 
         MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         viewModel.getDirectoryLiveData().observe(this, new Observer<List<ImageDirectory>>() {
@@ -82,7 +114,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            SettingActivity.startActivity(this);
+            mCurrentModePresenter.onMenuClicked();
             return true;
         }
 
@@ -103,7 +135,30 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onClick(View v) {
-        mFileBrowserUtils.showFileBorwser();
+        mCurrentModePresenter.onFloatBtnClicked();
+    }
+
+    public FloatingActionButton getFab() {
+        return mFab;
+    }
+
+    public FileBrowserUtils getFileBrowserUtils() {
+        return mFileBrowserUtils;
+    }
+
+    public MenuItem getSettingMenuItem() {
+        Menu menu = mToolbar.getMenu();
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem item = menu.getItem(i);
+            if (item.getItemId() == R.id.action_settings) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public FileRecyclerView getRecyclerView() {
+        return mRecyclerView;
     }
 
     @Override

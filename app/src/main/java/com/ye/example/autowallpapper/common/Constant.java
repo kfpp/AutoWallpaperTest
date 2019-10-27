@@ -8,4 +8,9 @@ public class Constant {
     public @interface SpId {
         String lastTimeShow = "lastTimeShow";
     }
+
+    public @interface SettingSpId {
+        String duration = "duration";
+    }
+
 }

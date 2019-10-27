@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">AutoWallPapper</string>
     <string name="action_settings">设置</string>
+    <string name="duration_selection_dialog_title">请选择更换壁纸的最小时间间隔</string>
+    <string name="show_duration">显示间隔： %d分钟</string>
+    <string name="common_confirm">确定</string>
+    <string name="common_cancel">取消</string>
 </resources>

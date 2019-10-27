@@ -1,6 +1,7 @@
 package com.ye.example.autowallpapper.presenters;
 
 import com.ye.example.autowallpapper.common.Constant;
+import com.ye.example.autowallpapper.models.settings.utils.SettingSPUtil;
 import com.ye.example.autowallpapper.presenters.base.IBaseShowPresenter;
 import com.ye.example.autowallpapper.utils.Logger;
 import com.ye.example.autowallpapper.utils.SpUtil;
@@ -9,7 +10,7 @@ import com.ye.example.autowallpapper.utils.SpUtil;
  * @author yezhihao 2019-08-05 15:00
  */
 public class AutoChangePresenter {
-    public static final int MINUTE = 60 * 1000;
+    private static final int MINUTE = 60 * 1000;
 
     private IBaseShowPresenter mshowPresenter;
 
@@ -19,7 +20,7 @@ public class AutoChangePresenter {
 
     public void checkAndChange() {
         Logger.d("yyyy", "checkAndChange");
-        if (true ||check()) {
+        if (check()) {
             showNext();
         }
     }
@@ -30,12 +31,12 @@ public class AutoChangePresenter {
 
     private boolean check() {
         long lastShowTime = SpUtil.get(Constant.SpId.lastTimeShow, 0L);
-        return lastShowTime == 0 || isMoreThanFiveMinute(lastShowTime);
+        return lastShowTime == 0 || isLongThanMinDuration(lastShowTime);
     }
 
-    private boolean isMoreThanFiveMinute(long lastShow) {
+    private boolean isLongThanMinDuration(long lastShow) {
         long nowTime = System.currentTimeMillis();
-        return (nowTime - lastShow) >= 5 * MINUTE;
+        return (nowTime - lastShow) >= SettingSPUtil.getShowDuration() * MINUTE;
     }
 
     private void showNext() {

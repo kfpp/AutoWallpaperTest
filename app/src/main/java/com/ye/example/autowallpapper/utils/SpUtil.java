@@ -2,18 +2,24 @@ package com.ye.example.autowallpapper.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.StringDef;
 
 import com.ye.example.autowallpapper.base.YEApp;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * @author yezhihao 2019-08-05 14:52
  */
 public class SpUtil {
 
-    private static final String SP_FILE_NAME = "default_sp";
-
     private static SharedPreferences getSp() {
-        return YEApp.getInstance().getSharedPreferences(SP_FILE_NAME, Context.MODE_PRIVATE);
+        return getSp(SPType.spDefault);
+    }
+
+    public static SharedPreferences getSp(@SPType String spType) {
+        return YEApp.getInstance().getSharedPreferences(spType, Context.MODE_PRIVATE);
     }
 
     public static void put(String key, long value) {
@@ -24,4 +30,10 @@ public class SpUtil {
         return getSp().getLong(key, defaultValue);
     }
 
+    @Retention(RetentionPolicy.SOURCE)
+    @StringDef({SPType.spDefault, SPType.spSetting})
+    public @interface SPType {
+        String spDefault = "default_sp";
+        String spSetting = "setting_sp";
+    }
 }

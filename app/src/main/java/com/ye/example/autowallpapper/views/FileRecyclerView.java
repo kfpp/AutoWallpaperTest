@@ -6,6 +6,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.ye.example.autowallpapper.R;
@@ -35,9 +37,13 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * @author yezhihao 2019-07-31 15:53
  */
-public class FileRecyclerView extends RecyclerView {
+public class FileRecyclerView extends RecyclerView implements AdapterView.OnItemLongClickListener {
 
     private Adapter mAdapter;
+
+    private IEditModeListener mEditModeListener;
+
+    private boolean mIsInEditMode;
 
     public FileRecyclerView(Context context) {
         this(context, null);
@@ -54,15 +60,51 @@ public class FileRecyclerView extends RecyclerView {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
+        mIsInEditMode = false;
         mAdapter = new Adapter();
         setLayoutManager(new LinearLayoutManager(getContext()));
         setAdapter(mAdapter);
+        mAdapter.setOnItemLongClickListener(this);
+    }
+
+    public void setmEditModeListener(IEditModeListener mEditModeListener) {
+        this.mEditModeListener = mEditModeListener;
+    }
+
+    public void exitEditMode() {
+        mIsInEditMode = false;
+        if (mEditModeListener != null) {
+            mEditModeListener.onExitEditMode();
+        }
+        mAdapter.setEditModeEnable(false);
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        if (!mIsInEditMode){
+            mIsInEditMode = true;
+            if (mEditModeListener != null) {
+                mEditModeListener.onEnterEditMode(position);
+            }
+            setEditModeChanged(mIsInEditMode);
+            return true;
+        }
+        return false;
+    }
+
+    private void setEditModeChanged(boolean isInEditMode) {
+        mAdapter.setEditModeEnable(isInEditMode);
+    }
+
+    public void setOnItemClickListener(AdapterView.OnItemClickListener itemClickListener) {
+        mAdapter.setOnItemClickListener(itemClickListener);
     }
 
     public void setData(List<ImageDirectory> data) {
         final List<DataAdapter> emptyList = new ArrayList<>();
         if (data == null || data.size() == 0) {
             mAdapter.setList(emptyList);
+            return;
         }
         Single.just(data)
                 .subscribeOn(Schedulers.io())
@@ -89,12 +131,13 @@ public class FileRecyclerView extends RecyclerView {
 
     private static final class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mTvName, mTvDesc, mTvCount;
-
+        private AppCompatCheckBox mCheckBox;
         private ViewHolder(@NonNull View itemView) {
             super(itemView);
             mTvName = itemView.findViewById(R.id.tv_name);
             mTvDesc = itemView.findViewById(R.id.tv_desc);
             mTvCount = itemView.findViewById(R.id.tv_count);
+            mCheckBox = itemView.findViewById(R.id.check_box);
         }
 
         private void setName(String name) {
@@ -109,16 +152,39 @@ public class FileRecyclerView extends RecyclerView {
             String text = "数量：" + count;
             mTvCount.setText(text);
         }
+
+        private void setEditMode(boolean isEditMode) {
+            mCheckBox.setVisibility(isEditMode ? VISIBLE : GONE);
+            mTvCount.setVisibility(isEditMode ? GONE : VISIBLE);
+            if (!isEditMode) {
+                mCheckBox.setChecked(false);
+            }
+        }
     }
 
     private static final class Adapter extends RecyclerView.Adapter<ViewHolder> {
 
         private List<DataAdapter> mList;
         private Map<String, Integer> mCountMap;
-
+        private AdapterView.OnItemClickListener mOnItemClickListener;
+        private AdapterView.OnItemLongClickListener mOnItemLongClickListener;
+        private boolean mIsInEditMode;
         private Adapter() {
             mList = new ArrayList<>();
             mCountMap = new HashMap<>();
+        }
+
+        private void setOnItemClickListener(AdapterView.OnItemClickListener mOnItemClickListener) {
+            this.mOnItemClickListener = mOnItemClickListener;
+        }
+
+        private void setOnItemLongClickListener(AdapterView.OnItemLongClickListener mOnItemLongClickListener) {
+            this.mOnItemLongClickListener = mOnItemLongClickListener;
+        }
+
+        private void setEditModeEnable(boolean isInEditMode) {
+            mIsInEditMode = isInEditMode;
+            notifyDataSetChanged();
         }
 
         public void setList(List<DataAdapter> list) {
@@ -136,9 +202,29 @@ public class FileRecyclerView extends RecyclerView {
 
         @Override
         public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
+            final int index = i;
             final DataAdapter data = mList.get(i);
             viewHolder.setName(data.mName);
             viewHolder.setDesc(data.mDesc);
+            viewHolder.setEditMode(mIsInEditMode);
+
+            if (mOnItemClickListener != null) {
+                viewHolder.itemView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mOnItemClickListener.onItemClick(null, v, index, getItemId(index));
+                    }
+                });
+            }
+
+            if (mOnItemLongClickListener != null) {
+                viewHolder.itemView.setOnLongClickListener(new OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        return mOnItemLongClickListener.onItemLongClick(null, v, index, getItemId(index));
+                    }
+                });
+            }
 
             if (mCountMap.containsKey(data.mPath)) {
                 Integer count = mCountMap.get(data.mPath);
@@ -212,5 +298,10 @@ public class FileRecyclerView extends RecyclerView {
         }
     }
 
+    public interface IEditModeListener {
+        void onEnterEditMode(int currentIndex);
+
+        void onExitEditMode();
+    }
 
 }
