@@ -1,7 +1,7 @@
 package com.ye.example.autowallpapper.presenters;
 
 import com.ye.example.autowallpapper.common.Constant;
-import com.ye.example.autowallpapper.models.settings.utils.SettingSPUtil;
+import com.ye.example.autowallpapper.module.settings.utils.SettingSPUtil;
 import com.ye.example.autowallpapper.presenters.base.IBaseShowPresenter;
 import com.ye.example.autowallpapper.utils.Logger;
 import com.ye.example.autowallpapper.utils.SpUtil;

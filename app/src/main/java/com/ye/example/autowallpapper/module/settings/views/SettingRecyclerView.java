@@ -1,7 +1,6 @@
-package com.ye.example.autowallpapper.models.settings.views;
+package com.ye.example.autowallpapper.module.settings.views;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;

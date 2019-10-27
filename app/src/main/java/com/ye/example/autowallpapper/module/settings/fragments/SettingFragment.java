@@ -1,4 +1,4 @@
-package com.ye.example.autowallpapper.models.settings.fragments;
+package com.ye.example.autowallpapper.module.settings.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,14 +7,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.ye.example.autowallpapper.R;
-import com.ye.example.autowallpapper.models.settings.utils.SettingSPUtil;
-import com.ye.example.autowallpapper.models.settings.views.DurationDialog;
-import com.ye.example.autowallpapper.models.settings.views.SettingGroup;
-import com.ye.example.autowallpapper.models.settings.views.SettingItem;
-import com.ye.example.autowallpapper.models.settings.views.SettingRecyclerView;
+import com.ye.example.autowallpapper.module.settings.utils.SettingSPUtil;
+import com.ye.example.autowallpapper.module.settings.views.DurationDialog;
+import com.ye.example.autowallpapper.module.settings.views.SettingGroup;
+import com.ye.example.autowallpapper.module.settings.views.SettingItem;
+import com.ye.example.autowallpapper.module.settings.views.SettingRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;

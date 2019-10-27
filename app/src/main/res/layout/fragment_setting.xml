@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.ye.example.autowallpapper.models.settings.views.SettingRecyclerView
+    <com.ye.example.autowallpapper.module.settings.views.SettingRecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/recycler_view_setting"/>

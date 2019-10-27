@@ -1,4 +1,4 @@
-package com.ye.example.autowallpapper.models.settings.utils;
+package com.ye.example.autowallpapper.module.settings.utils;
 
 import android.content.SharedPreferences;
 

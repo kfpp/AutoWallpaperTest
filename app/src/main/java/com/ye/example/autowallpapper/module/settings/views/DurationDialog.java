@@ -1,4 +1,4 @@
-package com.ye.example.autowallpapper.models.settings.views;
+package com.ye.example.autowallpapper.module.settings.views;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -9,7 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
 import com.ye.example.autowallpapper.R;
-import com.ye.example.autowallpapper.models.settings.utils.SettingSPUtil;
+import com.ye.example.autowallpapper.module.settings.utils.SettingSPUtil;
 
 public class DurationDialog extends DialogFragment {
 

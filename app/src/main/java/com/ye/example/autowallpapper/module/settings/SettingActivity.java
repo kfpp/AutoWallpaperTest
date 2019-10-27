@@ -1,4 +1,4 @@
-package com.ye.example.autowallpapper.models.settings;
+package com.ye.example.autowallpapper.module.settings;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.ye.example.autowallpapper.R;
-import com.ye.example.autowallpapper.models.settings.fragments.SettingFragment;
+import com.ye.example.autowallpapper.module.settings.fragments.SettingFragment;
 
 public class SettingActivity extends AppCompatActivity {
 

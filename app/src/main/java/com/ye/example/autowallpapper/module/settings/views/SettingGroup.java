@@ -1,4 +1,4 @@
-package com.ye.example.autowallpapper.models.settings.views;
+package com.ye.example.autowallpapper.module.settings.views;
 
 import java.util.ArrayList;
 import java.util.List;

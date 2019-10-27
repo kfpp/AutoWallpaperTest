@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".models.settings.SettingActivity"
+        <activity android:name=".module.settings.SettingActivity"
             android:label="@string/action_settings"
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".base.MainActivity"/>
