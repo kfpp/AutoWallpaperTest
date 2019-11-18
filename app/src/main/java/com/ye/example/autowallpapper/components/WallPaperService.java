@@ -17,10 +17,12 @@ import android.os.IBinder;
 import com.ye.example.autowallpapper.R;
 
 public class WallPaperService extends Service {
-    private static final String CHANNEL_ID = "AutoWallPaperService";
+    private String mChannelID, mChannelName;
     @Override
     public void onCreate() {
         super.onCreate();
+        mChannelID = getString(R.string.notification_channel_id);
+        mChannelName = getString(R.string.notification_channel_name);
         if (Build.VERSION.SDK_INT < 26) {
            initNotificationBelowApi26();
         } else {
@@ -35,8 +37,8 @@ public class WallPaperService extends Service {
 
     private void initNotificationBelowApi26() {
         Notification notification = new Notification.Builder(this)
-                .setContentTitle("主服务")//设置标题
-                .setContentText("运行中...")//设置内容
+                .setContentTitle(getApplicationContext().getResources().getString(R.string.notification_title))//设置标题
+                .setContentText(getApplicationContext().getResources().getString(R.string.notification_desc))//设置内容
                 .setWhen(System.currentTimeMillis())//设置创建时间
                 .setSmallIcon(R.mipmap.ic_launcher)//设置状态栏图标
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))//设置通知栏图标
@@ -48,17 +50,17 @@ public class WallPaperService extends Service {
     @TargetApi(26)
     private void initNotificationAboveApi26() {
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        NotificationChannel Channel = new NotificationChannel(CHANNEL_ID, "主服务", NotificationManager.IMPORTANCE_HIGH);
-        Channel.enableLights(true);//设置提示灯
-        Channel.setLightColor(Color.RED);//设置提示灯颜色
-        Channel.setShowBadge(true);//显示logo
-        Channel.setDescription("ytzn");//设置描述
-        Channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC); //设置锁屏可见 VISIBILITY_PUBLIC=可见
-        manager.createNotificationChannel(Channel);
+        NotificationChannel channel = new NotificationChannel(mChannelID, mChannelName, NotificationManager.IMPORTANCE_HIGH);
+        channel.enableLights(true);//设置提示灯
+        channel.setLightColor(Color.RED);//设置提示灯颜色
+        channel.setShowBadge(true);//显示logo
+        channel.setDescription(getString(R.string.notification_channel_desc));//设置描述
+        channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC); //设置锁屏可见 VISIBILITY_PUBLIC=可见
+        manager.createNotificationChannel(channel);
 
-        Notification notification = new Notification.Builder(this, CHANNEL_ID)
-                .setContentTitle("壁纸自动切换服务")//标题
-                .setContentText("正在运行中...")//内容
+        Notification notification = new Notification.Builder(this, mChannelID)
+                .setContentTitle(getApplicationContext().getResources().getString(R.string.notification_title))//标题
+                .setContentText(getApplicationContext().getResources().getString(R.string.notification_desc))
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.mipmap.ic_launcher)//小图标一定需要设置,否则会报错(如果不设置它启动服务前台化不会报错,但是你会发现这个通知不会启动),如果是普通通知,不设置必然报错
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
@@ -82,4 +84,6 @@ public class WallPaperService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         return START_STICKY;
     }
+
+
 }

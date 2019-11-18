@@ -1,8 +1,15 @@
 <resources>
+    <!--不翻译-->
+    <string name="notification_channel_id" translatable="false">AutoWallpaperNotification</string>
+    <string name="notification_channel_name" translatable="false">AutoWallpaper</string>
+    <string name="notification_channel_desc" translatable="false">自动更换壁纸常驻通知栏</string>
+
     <string name="app_name">AutoWallPapper</string>
     <string name="action_settings">设置</string>
     <string name="duration_selection_dialog_title">请选择更换壁纸的最小时间间隔</string>
     <string name="show_duration">显示间隔： %d分钟</string>
     <string name="common_confirm">确定</string>
     <string name="common_cancel">取消</string>
+    <string name="notification_title">壁纸自动切换服务</string>
+    <string name="notification_desc">正在运行中&#8230;</string>
 </resources>
