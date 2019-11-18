@@ -1,23 +1,63 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'AndResGuard'
 android {
-    compileSdkVersion 28
+    signingConfigs {
+        release {
+            storeFile keystoreFile
+            storePassword keystorePassword
+            keyAlias = keystoreKeyAlias
+            keyPassword keystoreKeyPassword
+        }
+    }
+    compileSdkVersion project.configCompileSdkVersion
     defaultConfig {
-        applicationId "com.yezh.personal.autowallpapper"
-        minSdkVersion 21
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        applicationId project.appId
+        minSdkVersion project.configMinSdkVersion
+        targetSdkVersion project.configTargetSdkVersion
+        versionCode project.versionCode
+        versionName project.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
-        release {
+        debug {
             minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        release {
+            //混淆
+            minifyEnabled true
+            //Zipalign优化
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources true
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
+// 压缩
+andResGuard {
+    mappingFile = null
+    use7zip = true
+    useSign = true
+    keepRoot = false
+    whiteList = [
 
+    ]
+    compressFilePattern = [
+            "*.png",
+            "*.jpg",
+            "*.jpeg",
+            "*.gif",
+            "resources.arsc"
+    ]
+    sevenzip {
+        artifact = 'com.tencent.mm:SevenZip:1.2.17'
+    }
+}
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:28.0.0'

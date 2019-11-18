@@ -1,7 +1,7 @@
 package com.ye.example.autowallpapper.presenters.main;
 
 import com.ye.example.autowallpapper.R;
-import com.ye.example.autowallpapper.base.MainActivity;
+import com.ye.example.autowallpapper.activities.MainActivity;
 import com.ye.example.autowallpapper.module.settings.SettingActivity;
 
 public class NormalModePresenter implements IModePresenter {

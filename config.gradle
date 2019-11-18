@@ -1,0 +1,19 @@
+def keystorePropertiesFile = rootProject.file("properties/keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+ext {
+    versionCode = project.hasProperty("VERSION_CODE") ? Integer.valueOf(project.VERSION_CODE).intValue() : 1
+    versionName = "1.0"
+    appId = "com.yezh.personal.autowallpapper"
+
+    configMinSdkVersion = 21
+    configCompileSdkVersion = 28
+    configTargetSdkVersion = 28
+
+    keystoreFile = rootProject.file(keystoreProperties['StoreFile'])
+    keystoreKeyAlias = keystoreProperties['KeyAlias']
+    keystorePassword = keystoreProperties['StorePassword']
+    keystoreKeyPassword = keystoreProperties['KeyPassword']
+
+
+}

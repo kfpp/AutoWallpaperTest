@@ -129,6 +129,11 @@ public class FileRecyclerView extends RecyclerView implements AdapterView.OnItem
                 });
     }
 
+    public String getPathByIndex(int index) {
+        DataAdapter dataAdapter = mAdapter.getItem(index);
+        return dataAdapter != null ? dataAdapter.mPath : null;
+    }
+
     private static final class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mTvName, mTvDesc, mTvCount;
         private AppCompatCheckBox mCheckBox;
@@ -191,6 +196,10 @@ public class FileRecyclerView extends RecyclerView implements AdapterView.OnItem
             mList.clear();
             mList.addAll(list);
             notifyDataSetChanged();
+        }
+
+        public DataAdapter getItem(int index) {
+            return index < getItemCount() ? mList.get(index) : null;
         }
 
         @NonNull

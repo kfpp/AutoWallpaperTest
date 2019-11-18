@@ -1,5 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-
+apply from: "config.gradle"
 buildscript {
     repositories {
         google()
@@ -8,7 +8,8 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.2'
-        
+        // 微信团队的开源压缩工具: https://github.com/shwenzhang/AndResGuard/blob/master/README.zh-cn.md
+        classpath 'com.tencent.mm:AndResGuard-gradle-plugin:1.2.17'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }

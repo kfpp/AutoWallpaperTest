@@ -1,4 +1,4 @@
-package com.ye.example.autowallpapper.base;
+package com.ye.example.autowallpapper.activities;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
