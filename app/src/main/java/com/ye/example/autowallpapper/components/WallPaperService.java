@@ -8,7 +8,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Binder;
 import android.os.Build;
@@ -40,8 +39,7 @@ public class WallPaperService extends Service {
                 .setContentTitle(getApplicationContext().getResources().getString(R.string.notification_title))//设置标题
                 .setContentText(getApplicationContext().getResources().getString(R.string.notification_desc))//设置内容
                 .setWhen(System.currentTimeMillis())//设置创建时间
-                .setSmallIcon(R.mipmap.ic_launcher)//设置状态栏图标
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))//设置通知栏图标
+                .setSmallIcon(R.mipmap.icon_app)//设置状态栏图标
                 .setContentIntent(generateClickIntent())
                 .build();
         startForeground(1, notification);
@@ -62,8 +60,7 @@ public class WallPaperService extends Service {
                 .setContentTitle(getApplicationContext().getResources().getString(R.string.notification_title))//标题
                 .setContentText(getApplicationContext().getResources().getString(R.string.notification_desc))
                 .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.mipmap.ic_launcher)//小图标一定需要设置,否则会报错(如果不设置它启动服务前台化不会报错,但是你会发现这个通知不会启动),如果是普通通知,不设置必然报错
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                .setSmallIcon(R.mipmap.icon_app)//小图标一定需要设置,否则会报错(如果不设置它启动服务前台化不会报错,但是你会发现这个通知不会启动),如果是普通通知,不设置必然报错
                 .setContentIntent(generateClickIntent())
                 .build();
         startForeground(1, notification);//服务前台化只能使用startForeground()方法,不能使用 notificationManager.notify(1,notification); 这个只是启动通知使用的,使用这个方法你只需要等待几秒就会发现报错了
