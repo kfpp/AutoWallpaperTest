@@ -3,51 +3,34 @@ package com.ye.example.autowallpapper.activities;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ye.example.autowallpapper.R;
 import com.ye.example.autowallpapper.base.BaseActivity;
-import com.ye.example.autowallpapper.common.Initializer;
 import com.ye.example.autowallpapper.data.database.FileDataBase;
 import com.ye.example.autowallpapper.data.entities.ImageDirectory;
-import com.ye.example.autowallpapper.data.entities.ImageFile;
 import com.ye.example.autowallpapper.presenters.main.EditModePresenter;
 import com.ye.example.autowallpapper.presenters.main.IModePresenter;
+import com.ye.example.autowallpapper.presenters.main.LiveGuidePresenter;
 import com.ye.example.autowallpapper.presenters.main.NormalModePresenter;
 import com.ye.example.autowallpapper.utils.FileBrowserUtils;
 import com.ye.example.autowallpapper.utils.FileRecommendUtil;
-import com.ye.example.autowallpapper.utils.FileUtil;
 import com.ye.example.autowallpapper.viewmodels.MainViewModel;
 import com.ye.example.autowallpapper.views.FileRecyclerView;
 import com.ye.example.autowallpapper.views.dialogs.PathResultDialog;
 
 import java.io.File;
 import java.util.List;
-import java.util.logging.Logger;
-
-import io.reactivex.Observable;
-import io.reactivex.Scheduler;
-import io.reactivex.Single;
-import io.reactivex.SingleEmitter;
-import io.reactivex.SingleOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener, PathResultDialog.IResultBackListener {
 
@@ -58,6 +41,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private IModePresenter mNormalModePresenter;
     private IModePresenter mEditModePresenter;
     private IModePresenter mCurrentModePresenter;
+    private LiveGuidePresenter mGuidePresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +54,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mFileBrowserUtils = new FileBrowserUtils(this);
         mNormalModePresenter = new NormalModePresenter(this);
         mEditModePresenter = new EditModePresenter(this);
+        mGuidePresenter = new LiveGuidePresenter(this);
         mCurrentModePresenter = mNormalModePresenter;
         mRecyclerView = findViewById(R.id.recycler_view);
 
@@ -102,6 +88,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         });
 
         viewModel.loadDirectories();
+        mGuidePresenter.checkAndShowGuidePage();
     }
 
     @Override

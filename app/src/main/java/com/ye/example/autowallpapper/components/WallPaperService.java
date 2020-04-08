@@ -15,6 +15,9 @@ import android.os.IBinder;
 
 import com.ye.example.autowallpapper.R;
 
+/**
+ * 常驻通知栏的前台Service，
+ */
 public class WallPaperService extends Service {
     private String mChannelID, mChannelName;
     @Override

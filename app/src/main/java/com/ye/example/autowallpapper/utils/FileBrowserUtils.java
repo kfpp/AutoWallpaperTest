@@ -45,6 +45,7 @@ public class FileBrowserUtils {
         String path = null;
         if (isResult(requestCode) && resultCode == Activity.RESULT_OK) {
             Uri uri = data.getData();
+            Logger.i("yzh", "uri : " + (uri == null ? "" : uri.toString()));
             if ("file".equalsIgnoreCase(uri.getScheme())) {//使用第三方应用打开
                 path = uri.getPath();
             } else {
@@ -59,19 +60,24 @@ public class FileBrowserUtils {
 
         // DocumentProvider
         if (DocumentsContract.isDocumentUri(context, uri)) {
+            Logger.i("yzh", "isDocumentUri");
             // ExternalStorageProvider
             if (isExternalStorageDocument(uri)) {
+                Logger.i("yzh", "isExternalStorageDocument");
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
 
                 if ("primary".equalsIgnoreCase(type)) {
+                    Logger.i("yzh", "primary");
                     return Environment.getExternalStorageDirectory() + "/" + split[1];
+                } else {
+                    Logger.i("yzh", "not primary, type : " + type + " split 1 " + split[1]);
                 }
             }
             // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
-
+                Logger.i("yzh", "isDownloadsDocument");
                 final String id = DocumentsContract.getDocumentId(uri);
                 final Uri contentUri = ContentUris.withAppendedId(
                         Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
@@ -80,6 +86,7 @@ public class FileBrowserUtils {
             }
             // MediaProvider
             else if (isMediaDocument(uri)) {
+                Logger.i("yzh", "isMediaDocument");
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
@@ -101,10 +108,12 @@ public class FileBrowserUtils {
         }
         // MediaStore (and general)
         else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            Logger.i("yzh", "is content uri");
             return getDataColumn(context, uri, null, null);
         }
         // File
         else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            Logger.i("yzh", "is file uri");
             return uri.getPath();
         }
         return null;

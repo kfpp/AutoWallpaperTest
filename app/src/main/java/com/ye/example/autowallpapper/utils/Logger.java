@@ -29,4 +29,10 @@ public class Logger {
             Log.e(tag, text);
         }
     }
+
+    public static void i(String tag, String text) {
+        if (enableLog) {
+            Log.i(tag, text);
+        }
+    }
 }

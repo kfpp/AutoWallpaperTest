@@ -6,6 +6,9 @@ import android.content.Intent;
 
 import com.ye.example.autowallpapper.proxy.broadcastevent.BroadCastEventProxy;
 
+/**
+ * 前台Service 点击广播
+ */
 public class NextWallPaperBroadcast extends BroadcastReceiver {
     public static final String ACTION_CLICKED = "com.ye.example.notification_click_broadcast";
     private BroadCastEventProxy mProxy;
