@@ -24,6 +24,8 @@ public class AutoChangePresenter {
         Logger.d("yyyy", "checkAndChange");
         if (canShowNext()) {
             showNext();
+        } else {
+            Logger.d("yyyy", "can not show next");
         }
     }
 

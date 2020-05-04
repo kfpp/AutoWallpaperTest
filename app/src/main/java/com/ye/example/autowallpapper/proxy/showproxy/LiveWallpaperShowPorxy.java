@@ -15,6 +15,7 @@ import com.ye.example.autowallpapper.base.YEApp;
 import com.ye.example.autowallpapper.common.Constant;
 import com.ye.example.autowallpapper.components.live.SimpleWallpaperAPI;
 import com.ye.example.autowallpapper.proxy.showproxy.base.IWallpaperShowProxy;
+import com.ye.example.autowallpapper.utils.Logger;
 import com.ye.example.autowallpapper.utils.SpUtil;
 
 import java.time.Year;
@@ -41,6 +42,7 @@ public class LiveWallpaperShowPorxy implements IWallpaperShowProxy {
         }).subscribe(new Consumer<Uri>() {
             @Override
             public void accept(Uri uri) throws Exception {
+                Logger.i("yzh", "uri : " + uri);
                 SimpleWallpaperAPI.getInstance().setWallPaper(YEApp.getInstance().getApplicationContext(), uri);
                 setShowedFlag();
             }
@@ -64,13 +66,20 @@ public class LiveWallpaperShowPorxy implements IWallpaperShowProxy {
                 MediaStore.Images.Media.DISPLAY_NAME + "= ?",
                 new String[] {path.substring(path.lastIndexOf("/") + 1)},
                 null);
-
-        Uri uri = null;
-        if(cursor.moveToFirst()) {
-            uri = ContentUris.withAppendedId(mediaUri,
-                    cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID)));
+        Logger.i("yzh", "getMediaUriFromPath " + path);
+        Uri uri = Uri.EMPTY;
+        if (cursor != null) {
+            if(cursor.moveToFirst()) {
+                uri = ContentUris.withAppendedId(mediaUri,
+                        cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID)));
+            }
+            cursor.close();
+            Logger.i("yzh", "getMediaUriFromPath uri" + uri);
         }
-        cursor.close();
+        if (uri == Uri.EMPTY) {
+            uri = Uri.parse(path);
+            Logger.i("yzh", "getMediaUriFromPath empty uri" + uri);
+        }
         return uri;
     }
 }

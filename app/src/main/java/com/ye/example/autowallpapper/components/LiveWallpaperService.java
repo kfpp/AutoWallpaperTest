@@ -21,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.ye.example.autowallpapper.components.live.LiveWallpaperManager;
 import com.ye.example.autowallpapper.utils.Logger;
 
@@ -160,8 +161,8 @@ public class LiveWallpaperService extends WallpaperService {
                     @Override
                     public void run() {
                         try {
-                            mWallpaperBitmap = Glide.with(getApplicationContext()).asBitmap()
-                                    .load(mWallpaperUrl).submit(1080, 1920).get();
+                            mWallpaperBitmap = load(mWallpaperUrl).submit(1080, 1920).get();
+
                             Logger.i(TAG, "wallpaperChanged: glide load uri bitmap success ");
                             onSuccess(update);
                         } catch (ExecutionException e) {
@@ -173,6 +174,16 @@ public class LiveWallpaperService extends WallpaperService {
                         }
                     }
                 });
+            }
+        }
+
+        private RequestBuilder<Bitmap> load(Uri uri) {
+            if (uri.toString().startsWith("/storage/")) {
+                return Glide.with(getApplicationContext()).asBitmap()
+                        .load(uri.toString());
+            } else {
+                return Glide.with(getApplicationContext()).asBitmap()
+                        .load(uri);
             }
         }
 

@@ -24,7 +24,7 @@ public class FileUtil {
     public static List<String> imagePathList(String parentDir) {
         File dir = new File(parentDir);
         if (!dir.exists() || !dir.isDirectory() || !dir.canRead()) {
-            throw new IllegalStateException("路径异常或无权限");
+            throw new IllegalStateException("路径异常或无权限 " + dir.getAbsolutePath());
         }
 
         File[] childFiles = dir.listFiles(new ImageFileter());
