@@ -90,7 +90,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         viewModel.loadDirectories();
         mGuidePresenter.checkAndShowGuidePage();
 
-//        viewModel.preloadTestData();
+        viewModel.preloadTestData();
 //        viewModel.showImages();
 //        ImageView ivCover = findViewById(R.id.iv_cover);
 //        Glide.with(this).load(Uri.parse("content://media/external/images/media/302929")).into(ivCover);
