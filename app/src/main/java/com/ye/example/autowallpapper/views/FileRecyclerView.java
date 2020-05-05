@@ -11,10 +11,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.SparseArray;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.ye.example.autowallpapper.R;
@@ -100,6 +104,10 @@ public class FileRecyclerView extends RecyclerView implements AdapterView.OnItem
         mAdapter.setOnItemClickListener(itemClickListener);
     }
 
+    public List<DataAdapter> getSelectedItem() {
+        return mAdapter.getSelectedItem();
+    }
+
     public void setData(List<ImageDirectory> data) {
         final List<DataAdapter> emptyList = new ArrayList<>();
         if (data == null || data.size() == 0) {
@@ -165,6 +173,10 @@ public class FileRecyclerView extends RecyclerView implements AdapterView.OnItem
                 mCheckBox.setChecked(false);
             }
         }
+
+        private void setOnCheckChangeListener(CheckBox.OnCheckedChangeListener checkChangeListener) {
+            mCheckBox.setOnCheckedChangeListener(checkChangeListener);
+        }
     }
 
     private static final class Adapter extends RecyclerView.Adapter<ViewHolder> {
@@ -173,10 +185,12 @@ public class FileRecyclerView extends RecyclerView implements AdapterView.OnItem
         private Map<String, Integer> mCountMap;
         private AdapterView.OnItemClickListener mOnItemClickListener;
         private AdapterView.OnItemLongClickListener mOnItemLongClickListener;
+        private SparseBooleanArray mCheckArray;
         private boolean mIsInEditMode;
         private Adapter() {
             mList = new ArrayList<>();
             mCountMap = new HashMap<>();
+            mCheckArray = new SparseBooleanArray();
         }
 
         private void setOnItemClickListener(AdapterView.OnItemClickListener mOnItemClickListener) {
@@ -198,6 +212,20 @@ public class FileRecyclerView extends RecyclerView implements AdapterView.OnItem
             notifyDataSetChanged();
         }
 
+        public List<DataAdapter> getSelectedItem() {
+            List<DataAdapter> list = new ArrayList<>();
+            if (mIsInEditMode) {
+                for (int index = 0; index < mCheckArray.size(); index++) {
+                    int key = mCheckArray.keyAt(index);
+                    boolean isCheck = mCheckArray.get(key);
+                    if (isCheck) {
+                        list.add(mList.get(index));
+                    }
+                }
+            }
+            return list;
+        }
+
         public DataAdapter getItem(int index) {
             return index < getItemCount() ? mList.get(index) : null;
         }
@@ -215,7 +243,15 @@ public class FileRecyclerView extends RecyclerView implements AdapterView.OnItem
             final DataAdapter data = mList.get(i);
             viewHolder.setName(data.mName);
             viewHolder.setDesc(data.mDesc);
+            viewHolder.setOnCheckChangeListener(null);
             viewHolder.setEditMode(mIsInEditMode);
+
+            viewHolder.setOnCheckChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    mCheckArray.put(index, isChecked);
+                }
+            });
 
             if (mOnItemClickListener != null) {
                 viewHolder.itemView.setOnClickListener(new OnClickListener() {
@@ -262,10 +298,22 @@ public class FileRecyclerView extends RecyclerView implements AdapterView.OnItem
         }
     }
 
-    private static final class DataAdapter {
+    public static final class DataAdapter {
         private String mName;
         private String mDesc;
         private String mPath;
+
+        public String getName() {
+            return mName;
+        }
+
+        public String getDesc() {
+            return mDesc;
+        }
+
+        public String getPath() {
+            return mPath;
+        }
     }
 
     private static final class DataAdapterFactory {

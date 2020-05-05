@@ -21,7 +21,7 @@ import io.reactivex.Flowable;
 @Dao
 public interface FileDao {
 
-    @Query("SELECT * FROM ImageDirectory")
+    @Query("SELECT * FROM ImageDirectory where dir_parent_path == ''")
     Flowable<List<ImageDirectory>> loadAllDirectories();
 
     @Query("select * from ImageFile")
@@ -47,4 +47,5 @@ public interface FileDao {
 
     @Delete
     int deleteFiles(ImageFile... files);
+
 }

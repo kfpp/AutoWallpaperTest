@@ -161,6 +161,7 @@ public class LiveWallpaperService extends WallpaperService {
                     @Override
                     public void run() {
                         try {
+                            Logger.i(TAG, "wallpaperChanged: uri  " + mWallpaperUrl);
                             mWallpaperBitmap = load(mWallpaperUrl).submit(1080, 1920).get();
 
                             Logger.i(TAG, "wallpaperChanged: glide load uri bitmap success ");

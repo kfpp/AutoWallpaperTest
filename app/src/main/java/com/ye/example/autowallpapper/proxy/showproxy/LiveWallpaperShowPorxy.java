@@ -34,18 +34,10 @@ import static com.ye.example.autowallpapper.presenters.base.BaseShowPresenter.RE
 public class LiveWallpaperShowPorxy implements IWallpaperShowProxy {
     @Override
     public void showImage(final String path) {
-        Single.just(path).observeOn(Schedulers.io()).map(new Function<String, Uri>() {
-            @Override
-            public Uri apply(String s) throws Exception {
-                return getMediaUriFromPath(YEApp.getInstance().getApplicationContext(), path);
-            }
-        }).subscribe(new Consumer<Uri>() {
-            @Override
-            public void accept(Uri uri) throws Exception {
-                Logger.i("yzh", "uri : " + uri);
-                SimpleWallpaperAPI.getInstance().setWallPaper(YEApp.getInstance().getApplicationContext(), uri);
-                setShowedFlag();
-            }
+        Single.just(path).observeOn(Schedulers.io()).map(s -> getMediaUriFromPath(YEApp.getInstance().getApplicationContext(), path)).subscribe(uri -> {
+            Logger.i("yzh", "uri : " + uri);
+            SimpleWallpaperAPI.getInstance().setWallPaper(YEApp.getInstance().getApplicationContext(), uri);
+            setShowedFlag();
         });
     }
 
@@ -60,7 +52,7 @@ public class LiveWallpaperShowPorxy implements IWallpaperShowProxy {
      * @return
      */
     public static Uri getMediaUriFromPath(Context context, String path) {
-        Uri mediaUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        /*Uri mediaUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         Cursor cursor = context.getContentResolver().query(mediaUri,
                 null,
                 MediaStore.Images.Media.DISPLAY_NAME + "= ?",
@@ -74,12 +66,16 @@ public class LiveWallpaperShowPorxy implements IWallpaperShowProxy {
                         cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID)));
             }
             cursor.close();
-            Logger.i("yzh", "getMediaUriFromPath uri" + uri);
+            Logger.i("yzh", "getMediaUriFromPath uri " + uri);
         }
         if (uri == Uri.EMPTY) {
             uri = Uri.parse(path);
-            Logger.i("yzh", "getMediaUriFromPath empty uri" + uri);
+            Logger.i("yzh", "getMediaUriFromPath empty uri " + uri);
         }
+        return uri;*/
+        Uri uri = Uri.parse(path);
+        Logger.i("yzh", "getMediaUriFromPath uri " + uri);
         return uri;
     }
+
 }

@@ -1,11 +1,13 @@
 package com.ye.example.autowallpapper.presenters.base;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.ye.example.autowallpapper.common.Constant;
 import com.ye.example.autowallpapper.proxy.showproxy.LiveWallpaperShowPorxy;
 import com.ye.example.autowallpapper.proxy.showproxy.WallpaperShowPorxy;
 import com.ye.example.autowallpapper.proxy.showproxy.base.IWallpaperShowProxy;
+import com.ye.example.autowallpapper.utils.Logger;
 import com.ye.example.autowallpapper.utils.SpUtil;
 
 import java.util.List;
@@ -29,6 +31,7 @@ public abstract class BaseShowPresenter implements IBaseShowPresenter {
     public void showNextWallPaper() {
         String nextImgPath = getNextShowImgPath();
         if (!TextUtils.isEmpty(nextImgPath)) {
+            Logger.i("yyyy", "nextImgPath: " + nextImgPath);
             setWallPapper(nextImgPath);
         }
     }
