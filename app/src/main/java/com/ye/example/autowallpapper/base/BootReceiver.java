@@ -3,6 +3,7 @@ package com.ye.example.autowallpapper.base;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 
 import com.ye.example.autowallpapper.common.Initializer;
 
@@ -12,6 +13,6 @@ import com.ye.example.autowallpapper.common.Initializer;
 public class BootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        Initializer.init(context);
+        Initializer.initWithStoragePermission(context);
     }
 }

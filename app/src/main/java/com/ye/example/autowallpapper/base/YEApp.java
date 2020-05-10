@@ -24,7 +24,11 @@ public class YEApp extends Application {
         sInstance = this;
         Context context = getApplicationContext();
         FileDataBase.initDataBase(context);
-        Initializer.init(context);
+        Initializer.initWithStoragePermission(context);
         GlobalData.getInstance().initImages();
+    }
+
+    public void onStoragePermissionGranted() {
+        Initializer.init(this.getApplicationContext());
     }
 }

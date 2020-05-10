@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.ye.example.autowallpapper.R;
 import com.ye.example.autowallpapper.base.BaseActivity;
+import com.ye.example.autowallpapper.base.YEApp;
 import com.ye.example.autowallpapper.data.database.FileDataBase;
 import com.ye.example.autowallpapper.data.entities.ImageDirectory;
 import com.ye.example.autowallpapper.presenters.main.EditModePresenter;
@@ -88,12 +89,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         });
 
         viewModel.loadDirectories();
-        mGuidePresenter.checkAndShowGuidePage();
+
+        if (hasStoragePermission()) {
+            mGuidePresenter.checkAndShowGuidePage();
+        } else {
+            mFab.setVisibility(View.GONE);
+        }
 
 //        viewModel.preloadTestData();
 //        viewModel.showImages();
 //        ImageView ivCover = findViewById(R.id.iv_cover);
 //        Glide.with(this).load(Uri.parse("content://media/external/images/media/302929")).into(ivCover);
+    }
+
+    @Override
+    protected void onStoragePermissionGranted() {
+        mFab.postDelayed(() -> mGuidePresenter.checkAndShowGuidePage(), 380);
+        mFab.setVisibility(View.VISIBLE);
+        YEApp.getInstance().onStoragePermissionGranted();
     }
 
     @Override
@@ -109,6 +122,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
         super.onBackPressed();
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
