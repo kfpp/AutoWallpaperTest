@@ -7,6 +7,7 @@ import android.util.Log;
 import com.ye.example.autowallpapper.data.database.FileDataBase;
 import com.ye.example.autowallpapper.data.entities.ImageDirectory;
 import com.ye.example.autowallpapper.data.entities.ImageFile;
+import com.ye.example.autowallpapper.utils.Logger;
 import com.ye.example.autowallpapper.utils.rxutils.AutoDisposedObserver;
 
 import org.reactivestreams.Subscription;
@@ -61,7 +62,7 @@ public class MainViewModel extends ViewModel {
                     sb.append('-');
                     sb.append(file.getPath());
                 }
-                Log.i("yyyy", "directories in db : " + sb.toString());
+                Logger.i("yyyy", "directories in db : " + sb.toString());
             }
         });
         FileDataBase.getInstance().loadAllFiles().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(imageFiles -> {
@@ -78,7 +79,7 @@ public class MainViewModel extends ViewModel {
                     i++;
                 }
             }
-            Log.i("yyyy", "file in db : " + sb.toString());
+            Logger.i("yyyy", "file in db : " + sb.toString());
         });
     }
 
@@ -108,7 +109,7 @@ public class MainViewModel extends ViewModel {
                     @Override
                     public void onComplete() {
                         super.onComplete();
-                        Log.i("yyyy", "" +
+                        Logger.i("yyyy", "" +
                                 "" + mSubDirectories.size() + "个子目录");
                         preloadImages(mSubDirectories);
 
@@ -123,7 +124,7 @@ public class MainViewModel extends ViewModel {
             return pathList;
         }
         File[] subDirectories = dirFile.listFiles(pathname -> pathname.isDirectory() && pathname.canRead());
-        Log.i("yyyy", "从目录 ： " + dir + "搜索到" + (subDirectories == null ? 0 : subDirectories.length) + "个子目录");
+        Logger.i("yyyy", "从目录 ： " + dir + "搜索到" + (subDirectories == null ? 0 : subDirectories.length) + "个子目录");
         if (subDirectories != null) {
             for (File file : subDirectories) {
                 pathList.add(file.getAbsolutePath());
@@ -156,8 +157,8 @@ public class MainViewModel extends ViewModel {
                     public void onNext(List<String> strings) {
                         if (strings != null && strings.size() > 0) {
                             String parent = new File(strings.get(0)).getParentFile().getAbsolutePath();
-//                            Log.i("yyyy", "插入目录 ： " + parent + ", " + strings.size() + " 张图片");
-                            Log.i("yyyy", "插入图片 ： " + parent + ", " + strings.size() + " 张图片");
+//                            Logger.i("yyyy", "插入目录 ： " + parent + ", " + strings.size() + " 张图片");
+                            Logger.i("yyyy", "插入图片 ： " + parent + ", " + strings.size() + " 张图片");
                             FileDataBase.getInstance().insertDirectoryAndFiles(parent, strings);
                         }
                     }

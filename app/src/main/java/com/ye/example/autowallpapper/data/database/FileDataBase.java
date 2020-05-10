@@ -5,11 +5,11 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.ye.example.autowallpapper.data.dao.FileDao;
 import com.ye.example.autowallpapper.data.entities.ImageDirectory;
 import com.ye.example.autowallpapper.data.entities.ImageFile;
+import com.ye.example.autowallpapper.utils.Logger;
 
 import java.io.File;
 import java.util.List;
@@ -112,7 +112,7 @@ public abstract class FileDataBase extends RoomDatabase {
                         .subscribe(new Consumer<List<ImageFile>>() {
                             @Override
                             public void accept(List<ImageFile> fileEntiries) throws Exception {
-                                Log.i("yyyy", "delete directory files : " + (fileEntiries != null ? fileEntiries.size() : 0));
+                                Logger.i("yyyy", "delete directory files : " + (fileEntiries != null ? fileEntiries.size() : 0));
 
                                 deleteFiles(fileEntiries);
                                 ImageDirectory directory = new ImageDirectory();

@@ -8,6 +8,7 @@ import com.ye.example.autowallpapper.R;
 import com.ye.example.autowallpapper.activities.MainActivity;
 import com.ye.example.autowallpapper.data.database.FileDataBase;
 import com.ye.example.autowallpapper.data.entities.ImageFile;
+import com.ye.example.autowallpapper.utils.Logger;
 import com.ye.example.autowallpapper.utils.VibratorUtil;
 import com.ye.example.autowallpapper.views.FileRecyclerView;
 
@@ -47,15 +48,15 @@ public class EditModePresenter implements IModePresenter {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe(integer -> {
-                        Log.i("yyyy", "delete item : " + integer);
+                        Logger.i("yyyy", "delete item : " + integer);
                     });
         }
-        Log.i("yyyy", "selected item : " + sb.toString());
+        Logger.i("yyyy", "selected item : " + sb.toString());
         RecyclerView.Adapter adapter = mTarget.getRecyclerView().getAdapter();
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         } else {
-            Log.e("yyyy", "adapter is  null");
+            Logger.e("yyyy", "adapter is  null");
         }
     }
 

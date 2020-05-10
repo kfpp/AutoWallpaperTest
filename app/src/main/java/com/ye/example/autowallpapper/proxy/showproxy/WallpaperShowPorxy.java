@@ -10,6 +10,7 @@ import android.util.Log;
 import com.ye.example.autowallpapper.base.YEApp;
 import com.ye.example.autowallpapper.common.Constant;
 import com.ye.example.autowallpapper.proxy.showproxy.base.IWallpaperShowProxy;
+import com.ye.example.autowallpapper.utils.Logger;
 import com.ye.example.autowallpapper.utils.SpUtil;
 
 import io.reactivex.Single;
@@ -29,7 +30,7 @@ public class WallpaperShowPorxy implements IWallpaperShowProxy {
                 long timeStart = System.currentTimeMillis();
                 Bitmap image = BitmapFactory.decodeFile(path);
                 long tiemEnd = System.currentTimeMillis();
-                Log.d("yyyy", "decodeFile cost : " + (tiemEnd - timeStart));
+                Logger.d("yyyy", "decodeFile cost : " + (tiemEnd - timeStart));
                 emitter.onSuccess(image);
             }
         });

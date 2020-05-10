@@ -55,7 +55,7 @@ public class AppUtil {
             }
             if(sortedMap.size() != 0) {
                 topActivityPackageName =  sortedMap.get(sortedMap.lastKey()).getPackageName();
-                Log.d(TAG,"Top activity package name = " + topActivityPackageName);
+                Logger.d(TAG,"Top activity package name = " + topActivityPackageName);
             }
         }
 

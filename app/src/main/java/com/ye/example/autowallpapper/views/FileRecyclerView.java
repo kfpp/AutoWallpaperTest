@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.ye.example.autowallpapper.R;
 import com.ye.example.autowallpapper.data.entities.ImageDirectory;
 import com.ye.example.autowallpapper.data.entities.ImageFile;
+import com.ye.example.autowallpapper.utils.Logger;
 import com.ye.example.autowallpapper.viewmodels.MainViewModel;
 
 import java.io.File;
@@ -282,7 +283,7 @@ public class FileRecyclerView extends RecyclerView implements AdapterView.OnItem
                     public void onChanged(@Nullable Integer integer) {
                         int count = integer == null ? -1 : integer;
                         mCountMap.put(data.mPath, count);
-                        Log.d("yyyy", "directory : " + data.mName + " image count : " + integer);
+                        Logger.d("yyyy", "directory : " + data.mName + " image count : " + integer);
                         viewHolder.setCount(count);
                         viewModel.getImageCountLiveData(data.mPath).removeObserver(this);
                     }

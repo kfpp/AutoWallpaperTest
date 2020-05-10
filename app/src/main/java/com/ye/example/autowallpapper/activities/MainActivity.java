@@ -61,7 +61,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mRecyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("yyyy", " position : " + position + ", id : " + id);
+//                Log.d("yyyy", " position : " + position + ", id : " + id);
             }
         });
 
